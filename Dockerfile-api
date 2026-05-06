@@ -20,7 +20,7 @@
 #
 # Build container for Java app
 #
-FROM gradle:8.10-jdk22 AS builder
+FROM eclipse-temurin:22-jdk-noble AS builder
 USER root
 WORKDIR /home/app
 
@@ -29,13 +29,16 @@ COPY ./j2735-2024-api/src               /home/app/j2735-2024-api/src
 COPY ./j2735-2024-api/build.gradle      /home/app/j2735-2024-api
 COPY ./j2735-2024-api/settings.gradle   /home/app/j2735-2024-api
 COPY ./j2735-2024-api/gradle            /home/app/j2735-2024-api/gradle
+COPY ./j2735-2024-api/gradlew           /home/app/j2735-2024-api/gradlew
 
 # lib
 COPY ./j2735-2024-ffm-lib/src/main/java     /home/app/j2735-2024-ffm-lib/src/main/java
 COPY ./j2735-2024-ffm-lib/build.gradle      /home/app/j2735-2024-ffm-lib
 COPY ./j2735-2024-ffm-lib/settings.gradle   /home/app/j2735-2024-ffm-lib
+COPY ./j2735-2024-ffm-lib/gradle            /home/app/j2735-2024-ffm-lib/gradle
+COPY ./j2735-2024-ffm-lib/gradlew           /home/app/j2735-2024-ffm-lib/gradlew
 
-RUN cd j2735-2024-api && gradle clean build
+RUN chmod +x /home/app/j2735-2024-api/gradlew && cd j2735-2024-api && ./gradlew clean build
 
 ## Entrypoint for debugging
 #ENTRYPOINT ["tail", "-f", "/dev/null"]
